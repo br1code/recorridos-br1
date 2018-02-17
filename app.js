@@ -1,7 +1,3 @@
-// input direccion inicial
-// guardar posicion inicial(lat, lon)                                                    READY (setStart)
-// ingresar recibos (si es correcto, pedir posicion (lat, lon) y guardar el recibo)
-// una vez terminado de ingresar recibos, ordenar
 const express = require("express");
 const hbs = require("hbs");
 
@@ -56,15 +52,14 @@ app.get("*", (req, res) => {
     res.send("Ups, you are lost");
 });
 
+// SERVER LISTENING
 // -----------------------------------------------------
-// server listening 
 app.listen(port, () => {
     console.log(`Server listening on port ${port}`);
 });
 
-
-
-// FUNCTIONS -------------------------------------------------------------
+// FUNCTIONS
+// -----------------------------------------------------
 function addRecibo(address, callback) {
     geocode.getPositions(address, (error, response) => {    
         if (!error) { // if not error
