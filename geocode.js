@@ -1,7 +1,7 @@
 const request = require("request");
 
-let getPositions = (address, callback) => {
-    let encodedAddress = encodeURIComponent(`${address} rosario`);
+let getPositions = (address, callback, attemps = 5) => {
+    let encodedAddress = encodeURIComponent(`${address} rosario santafe argentina`);
 
     request({
         url: `https://maps.googleapis.com/maps/api/geocode/json?address=${encodedAddress}`,
@@ -14,7 +14,12 @@ let getPositions = (address, callback) => {
                 lon: body.results[0].geometry.location.lng
             });
         } else {
-            callback("Unable to find that address");
+            if (attemps) {
+                console.log(`Unable to find that address or connect to API, attemps left : ${attemps}`);
+                getPositions(address, callback, --attemps);
+            } else {
+                callback("Unable to find that address");
+            }        
         }
     })
 };

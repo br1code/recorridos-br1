@@ -23,15 +23,15 @@ app.get("/", (req, res) => {
     let address = req.query.address;
     if (address) {
         addRecibo(address, (err) => {
-            if (!err) {
-                res.render("index.hbs", {pageTitle: setTitle()});
+            if (err) {
+                res.render("index.hbs", {pageTitle: "Direccion no encontrada o error de conexión"});
             } else {
-                res.render("index.hbs", {pageTitle: "Direccion no encontrada"});
-            }       
-        }); 
+                res.render("index.hbs", {pageTitle: setTitle()});
+            }
+        });
     } else {
         res.render("index.hbs", {pageTitle: setTitle()});
-    } 
+    }
 });
 
 app.get("/sort", (req, res) => {
@@ -61,20 +61,20 @@ app.listen(port, () => {
 // FUNCTIONS
 // -----------------------------------------------------
 function addRecibo(address, callback) {
-    geocode.getPositions(address, (error, response) => {    
-        if (!error) { // if not error
-            if (!start) { // if start isnt ready yet, set it
-                start = response;
-                console.log("Start position ready", start);
-                callback();
-            } else { // else add recibo
+    geocode.getPositions(address, (error, response) => {
+        if (error) {
+            callback("Unable to find that address");
+        } else {
+            if (start) { // if start is ready
                 let recibo = response;
                 recibos.push(recibo);
-                console.log("Recibo added to main list", JSON.stringify(recibos));
+                console.log(`Recibo added to main list : ${response.dir}`);
                 callback();
-            } 
-        } else {
-            callback("Unable to find that address");
+            } else { // if start isnt ready yet
+                start = response;
+                console.log(`Start position ready : ${start.dir}`);
+                callback();
+            }
         }
     });
 }
@@ -87,7 +87,7 @@ function sortRecibos(callback) {
         // get a copy of actual recibos
         let rec = recCopy.slice();
         // calculate all distances from start to each recibo 
-        rec.forEach((r,index) => {
+        rec.forEach((r, index) => {
             r.dist = distance.getDistance(start, r);
             r.index = index;
         });
