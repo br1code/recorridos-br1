@@ -1,8 +1,7 @@
 const express = require("express");
 const hbs = require("hbs");
 
-const geocode = require("./geocode");
-const distance = require("./distance");
+const logic = require("./logic");
 
 const port = process.env.PORT || 3000;
 
@@ -10,8 +9,8 @@ var app = express();
 
 app.set("view engine", "hbs");
 
-var recibos = [];
-var start = "";
+global.recibos = [];
+global.start = "";
 
 // telling express to use static directory
 app.use(express.static(__dirname + "/public"));
@@ -22,20 +21,20 @@ app.use(express.static(__dirname + "/public"));
 app.get("/", (req, res) => {
     let address = req.query.address;
     if (address) {
-        addRecibo(address, (err) => {
+        logic.addRecibo(address, (err) => {
             if (err) {
                 res.render("index.hbs", {pageTitle: "Direccion no encontrada o error de conexión"});
             } else {
-                res.render("index.hbs", {pageTitle: setTitle()});
+                res.render("index.hbs", {pageTitle: logic.setTitle()});
             }
         });
     } else {
-        res.render("index.hbs", {pageTitle: setTitle()});
+        res.render("index.hbs", {pageTitle: logic.setTitle()});
     }
 });
 
 app.get("/sort", (req, res) => {
-    sortRecibos(() => {
+    logic.sortRecibos(() => {
         res.render("sort.hbs",{recibos: recibos});
     })
 });
@@ -57,54 +56,3 @@ app.get("*", (req, res) => {
 app.listen(port, () => {
     console.log(`Server listening on port ${port}`);
 });
-
-// FUNCTIONS
-// -----------------------------------------------------
-function addRecibo(address, callback) {
-    geocode.getPositions(address, (error, response) => {
-        if (error) {
-            callback("Unable to find that address");
-        } else {
-            if (start) { // if start is ready
-                let recibo = response;
-                recibos.push(recibo);
-                console.log(`Recibo added to main list : ${response.dir}`);
-                callback();
-            } else { // if start isnt ready yet
-                start = response;
-                console.log(`Start position ready : ${start.dir}`);
-                callback();
-            }
-        }
-    });
-}
-
-function sortRecibos(callback) {
-    let recCopy = recibos.slice();
-    let ordered = [];
-
-    for (let i = 0; i < recibos.length; i++) {
-        // get a copy of actual recibos
-        let rec = recCopy.slice();
-        // calculate all distances from start to each recibo 
-        rec.forEach((r, index) => {
-            r.dist = distance.getDistance(start, r);
-            r.index = index;
-        });
-        // get the closest one
-        let closest = rec.reduce((a, b) => (a.dist < b.dist) ? a : b);
-        // set it as new "start"
-        start = closest;
-        // add it to the list of ordered
-        ordered.push(closest);
-        // remove the closest one from the list
-        recCopy.splice(closest.index, 1);
-    }
-
-    recibos = ordered;
-    callback();
-}
-
-function setTitle() {
-    return (start) ? "Ingrese un recibo" : "Ingrese la dirección inicial";
-}
