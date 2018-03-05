@@ -1,7 +1,7 @@
 const request = require("request");
 
 
-let getPositions = (address, callback, attemps = 5) => {
+let getPositions = (address, callback, attemps = 3) => {
     let encodedAddress = encodeURIComponent(`${address} rosario santafe argentina`);
 
     request({

@@ -27,34 +27,21 @@ h1 {
     font-size: 18px;
 	background-color: #f7f7f7;
 	width: 100%;
-	padding: 13px 13px 13px 20px;
 	color: black;
+	padding: 13px 13px 13px 20px;
 	-webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
 	box-sizing: border-box;
 	border: 3px solid rgba(0,0,0,0);
+	text-align: center;
 }
 
 #inputAddress:focus {
     background-color: white;
-	border: 3px solid #cb2d3e;
+	/* border: 3px solid #cb2d3e; */
 	outline: none;
 }
 
-#sendAddress, #sort {
-    width: 100%;
-    background-color: #cb2d3e;
-	color: white;
-    border: none;
-    padding: 10px 20px;
-	text-transform: uppercase;
-	font-size: 16px;
-	font-weight: normal;
-    text-align: center;
-    transition: letter-spacing 0.2s ease-in-out;
-}
-
-#sendAddress:hover, #sort:hover {
-    cursor: pointer;
-    letter-spacing: 3px;
+a {
+	text-decoration: none;
 }

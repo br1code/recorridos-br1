@@ -13,7 +13,7 @@ body {
 	box-shadow: 0 0 3px rgba(0,0,0, 0.1);
 }
 
-#add, #reset{
+#reset{
     width: 100%;
     background-color: #cb2d3e;
 	color: white;
@@ -26,7 +26,7 @@ body {
     transition: letter-spacing 0.2s ease-in-out;
 }
 
-#add:hover, #reset:hover{
+#reset:hover{
     cursor: pointer;
     letter-spacing: 3px;
 }
@@ -54,7 +54,7 @@ li:nth-child(2n) {
 }
 
 li:hover {
-    background-color: #ef473a;
+    background-color: #cb2d3e;
     color: white;
     font-size: 110%;
 }

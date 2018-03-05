@@ -1,6 +1,9 @@
 const geocode = require("./geocode");
 const distance = require("./distance");
 
+global.recibos = [];
+global.start = "";
+
 // FUNCTIONS
 // -----------------------------------------------------
 function addRecibo(address, callback) {
@@ -49,6 +52,17 @@ function sortRecibos(callback) {
     callback();
 }
 
+function removeRecibo(address, callback) {
+    for (let i = 0; i < recibos.length; i++) {
+        if (recibos[i].dir === address) { // if the recibo is found
+            recibos.splice(i, 1);   // then delete from the main list
+            console.log(`Recibo removed from the main list : ${address}`);
+            i = recibos.length; // exit for loop
+        }
+    }
+    callback();
+}
+
 function setTitle() {
     return (start) ? "Ingrese un recibo" : "Ingrese la dirección inicial";
 }
@@ -56,5 +70,6 @@ function setTitle() {
 module.exports = {
     addRecibo: addRecibo,
     sortRecibos: sortRecibos,
-    setTitle: setTitle
+    setTitle: setTitle,
+    removeRecibo: removeRecibo
 };
