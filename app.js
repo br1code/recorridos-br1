@@ -36,8 +36,10 @@ app.get("/error", (req, res) => {
 app.get("/remove/:address", (req, res) => {
     let address = req.params.address;
     logic.removeRecibo(address, () => {
-        res.redirect("/");
-    })
+        logic.sortRecibos(() => {
+            res.redirect("/");
+        });
+    });
 });
 
 app.post("/add", (req, res) => {
